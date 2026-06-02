@@ -72,3 +72,5 @@ uvicorn.err.log
 # React
 crm-frontend/node_modules/
 crm-frontend/build/
+
+support-crm-frontend/
