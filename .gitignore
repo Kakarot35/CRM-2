@@ -78,3 +78,5 @@ support-crm-frontend/
 *.db
 *.log
 crm-frontend/build/
+
+start-crm.ps1
