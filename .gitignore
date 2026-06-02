@@ -52,3 +52,23 @@ coverage/
 # =========================
 *.tmp
 *.swp
+
+# Python
+venv/
+__pycache__/
+*.pyc
+
+# Environment
+.env
+
+# Logs
+*.log
+uvicorn.out.log
+uvicorn.err.log
+
+# Database
+*.db
+
+# React
+crm-frontend/node_modules/
+crm-frontend/build/
