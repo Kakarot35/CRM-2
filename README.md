@@ -1,13 +1,55 @@
 # Support CRM — Datastraw Assessment
 
-Full-stack Customer Support Ticketing CRM with role-based access control.
+Full-stack Customer Support Ticketing CRM built with React and FastAPI featuring role-based access control, ticket management, and admin analytics.
 
 ## 🔑 Demo Accounts
 
-| Role | Email | Password |
-|------|-------|----------|
-| Admin | `admin@datastraw.in` | `Admin@123` |
-| Customer | `demo@customer.com` | `Demo@123` |
+| Role     | Email                | Password    |
+| -------- | -------------------- | ----------- |
+| Admin    | `admin@datastraw.in` | `Admin@123` |
+| Customer | `demo@customer.com`  | `Demo@123`  |
+
+---
+
+## 🛠️ Tech Stack
+
+### Frontend
+
+* React.js
+* React Router
+* Context API
+* Axios
+
+### Backend
+
+* FastAPI
+* SQLAlchemy
+* SQLite
+* JWT Authentication
+* Pydantic
+
+---
+
+## 📂 Project Structure
+
+```text
+CRM-FULL-PROJECT/
+│
+├── crm-backend/
+│   ├── app/
+│   ├── requirements.txt
+│   └── .env.example
+│
+├── crm-frontend/
+│   ├── src/
+│   ├── public/
+│   ├── package.json
+│   ├── package-lock.json
+│   └── .env.example
+│
+├── README.md
+└── .gitignore
+```
 
 ---
 
@@ -16,109 +58,154 @@ Full-stack Customer Support Ticketing CRM with role-based access control.
 ### Backend
 
 ```bash
-cd backend
+cd crm-backend
+
 python -m venv venv
 
 # Windows
 venv\Scripts\activate
+
 # Mac/Linux
 source venv/bin/activate
 
 pip install -r requirements.txt
-cp .env.example .env
+
 uvicorn app.main:app --reload
 ```
 
-API runs at: `http://localhost:8000`
-Swagger docs: `http://localhost:8000/docs`
+API runs at:
 
-### Frontend (new terminal)
-
-```bash
-cd frontend
-npm install
-npm start
+```text
+http://localhost:8000
 ```
 
-App runs at: `http://localhost:3000`
+Swagger Docs:
+
+```text
+http://localhost:8000/docs
+```
 
 ---
 
-## 🌐 Deploy on Render.com
+### Frontend
 
-### Step 1 — Deploy Backend
+```bash
+cd crm-frontend
 
-1. Push repo to GitHub
-2. Go to [render.com](https://render.com) → **New → Web Service**
-3. Connect your GitHub repo
-4. Settings:
-   - **Root Directory**: `backend`
-   - **Runtime**: Python 3
-   - **Build Command**: `pip install -r requirements.txt`
-   - **Start Command**: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
-5. Add environment variables:
-   - `SECRET_KEY` = any long random string
-   - `DATABASE_URL` = `sqlite:///support_crm.db`
-6. Click **Deploy** — copy the live URL e.g. `https://crm-api.onrender.com`
+npm install
 
-### Step 2 — Deploy Frontend
+npm start
+```
 
-1. Go to Render → **New → Static Site**
-2. Connect same GitHub repo
-3. Settings:
-   - **Root Directory**: `frontend`
-   - **Build Command**: `npm install && npm run build`
-   - **Publish Directory**: `build`
-4. Add environment variable:
-   - `REACT_APP_API_URL` = your backend URL from Step 1
-5. Click **Deploy**
+Application runs at:
+
+```text
+http://localhost:3000
+```
 
 ---
 
 ## ✨ Features
 
-**Auth**
-- JWT-based login / register
-- Role-based access: Admin and Customer
-- Demo accounts auto-created on startup
+### Authentication
 
-**Customer Portal**
-- Submit new support tickets with priority
-- View only their own tickets
-- Read agent responses (public notes)
+* JWT-based Login & Registration
+* Role-Based Access Control
+* Secure Protected Routes
+* Demo Accounts Seeded Automatically
 
-**Admin Panel**
-- Dashboard with live stats (total, open, in-progress, closed)
-- View and search all tickets
-- Filter by status
-- Update ticket status
-- Add internal (hidden) or public notes
-- Delete tickets
-- Customer list derived from ticket data
+### Customer Portal
+
+* Create Support Tickets
+* View Personal Tickets
+* Track Ticket Status
+* Read Public Notes from Admin
+
+### Admin Dashboard
+
+* Dashboard Statistics
+* View All Tickets
+* Search and Filter Tickets
+* Update Ticket Status
+* Add Public/Internal Notes
+* Delete Tickets
+* Manage Customer Requests
 
 ---
 
 ## 🗄 Database Schema
 
+```text
+users
+ ├── id
+ ├── name
+ ├── email
+ ├── password_hash
+ └── role
+
+tickets
+ ├── id
+ ├── ticket_id
+ ├── customer_name
+ ├── customer_email
+ ├── customer_id
+ ├── subject
+ ├── description
+ ├── status
+ ├── priority
+ ├── created_at
+ └── updated_at
+
+notes
+ ├── id
+ ├── ticket_ref
+ ├── note_text
+ ├── author
+ ├── is_internal
+ └── created_at
 ```
-users         — id, name, email, password_hash, role
-tickets       — id, ticket_id, customer_name, customer_email, customer_id,
-                subject, description, status, priority, created_at, updated_at
-notes         — id, ticket_ref, note_text, author, is_internal, created_at
-```
+
+---
 
 ## 📡 API Endpoints
 
-| Method | Endpoint | Auth | Description |
-|--------|----------|------|-------------|
-| POST | `/api/auth/register` | None | Register customer |
-| POST | `/api/auth/login` | None | Login, get JWT |
-| GET | `/api/auth/me` | Any | Own profile |
-| POST | `/api/customer/tickets` | Customer | Create ticket |
-| GET | `/api/customer/tickets` | Customer | Own tickets |
-| GET | `/api/customer/tickets/:id` | Customer | Ticket detail |
-| GET | `/api/admin/tickets` | Admin | All tickets |
-| GET | `/api/admin/tickets/stats` | Admin | Dashboard stats |
-| GET | `/api/admin/tickets/:id` | Admin | Ticket detail |
-| PUT | `/api/admin/tickets/:id` | Admin | Update + note |
-| DELETE | `/api/admin/tickets/:id` | Admin | Delete ticket |
+| Method | Endpoint                    | Access        |
+| ------ | --------------------------- | ------------- |
+| POST   | `/api/auth/register`        | Public        |
+| POST   | `/api/auth/login`           | Public        |
+| GET    | `/api/auth/me`              | Authenticated |
+| POST   | `/api/customer/tickets`     | Customer      |
+| GET    | `/api/customer/tickets`     | Customer      |
+| GET    | `/api/customer/tickets/:id` | Customer      |
+| GET    | `/api/admin/tickets`        | Admin         |
+| GET    | `/api/admin/tickets/stats`  | Admin         |
+| GET    | `/api/admin/tickets/:id`    | Admin         |
+| PUT    | `/api/admin/tickets/:id`    | Admin         |
+| DELETE | `/api/admin/tickets/:id`    | Admin         |
+
+---
+
+## 🌐 Deployment
+
+The application can be deployed on Render using:
+
+* FastAPI Web Service for Backend
+* React Static Site for Frontend
+
+Environment variables:
+
+```env
+SECRET_KEY=your-secret-key
+DATABASE_URL=sqlite:///support_crm.db
+REACT_APP_API_URL=https://your-backend-url.onrender.com
+```
+
+---
+
+## 👨‍💻 Author
+
+**Karan**
+
+Artificial Intelligence & Data Science Engineer
+
+GitHub: https://github.com/Kakarot35
