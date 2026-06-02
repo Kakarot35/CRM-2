@@ -2,6 +2,7 @@ from typing import List, Literal, Optional
 
 from pydantic import BaseModel, Field
 
+
 TicketStatus = Literal["Open", "In Progress", "Closed"]
 UserRole = Literal["admin", "customer"]
 
@@ -71,7 +72,7 @@ class NoteRead(BaseModel):
 
 class TicketDetail(TicketListItem):
     description: str
-    notes: List[NoteRead] = []
+    notes: List[NoteRead] = Field(default_factory=list)
 
 
 class TicketUpdate(BaseModel):
