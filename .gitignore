@@ -74,3 +74,7 @@ crm-frontend/node_modules/
 crm-frontend/build/
 
 support-crm-frontend/
+
+*.db
+*.log
+crm-frontend/build/
